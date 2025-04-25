@@ -70,6 +70,7 @@ admin_template = """
 <html>
 <head>
     <title>Admin - Scrum Story Point Voting</title>
+    <meta http-equiv="refresh" content="5">
     <script>
         function confirmReset() {
             return confirm('Are you sure you want to reset all votes?');
