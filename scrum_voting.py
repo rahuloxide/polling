@@ -57,20 +57,14 @@ html_template = """
         input[type="submit"]:hover {
             background-color: #005bb5;
         }
-        a {
-            margin-top: 20px;
-            text-decoration: none;
-            color: #007aff;
-            font-weight: bold;
-        }
         .flash-message {
-            color: green;
+            color: #007aff;
             font-weight: bold;
             margin-top: 30px;
         }
         .voted-box {
             background-color: lightgrey;
-            color: green;
+            color: #007aff;
             font-weight: bold;
         }
     </style>
@@ -88,7 +82,6 @@ html_template = """
         {% endfor %}
         <input type="submit" value="Submit Vote">
     </form>
-    <a href="/admin">Go to Admin Page</a>
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <div class="flash-message">
@@ -141,12 +134,6 @@ admin_template = """
         input[type="submit"]:hover {
             background-color: #c12722;
         }
-        a {
-            margin-top: 20px;
-            text-decoration: none;
-            color: #007aff;
-            font-weight: bold;
-        }
     </style>
     <script>
         function confirmReset() {
@@ -172,12 +159,9 @@ admin_template = """
     <form method="post" action="/reset" onsubmit="return confirmReset();">
         <input type="submit" value="Reset Votes">
     </form>
-    <a href="/">Go Back to Voting Page</a>
 </body>
 </html>
 """
-
-# Flask routes and logic
 
 @app.route('/', methods=['GET'])
 def home():
