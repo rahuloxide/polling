@@ -29,6 +29,11 @@ html_template = """
             color: green;
             font-weight: bold;
         }
+        .voted-box {
+            background-color: lightgrey;
+            color: green;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -46,7 +51,7 @@ html_template = """
         {% for member in members %}
             <label for="{{ member }}">{{ member }}:</label>
             {% if votes[member] %}
-                <input type="text" id="{{ member }}" name="{{ member }}" value="*" readonly><br><br>
+                <input type="text" id="{{ member }}" name="{{ member }}" value="VOTED" readonly class="voted-box"><br><br>
             {% else %}
                 <input type="text" id="{{ member }}" name="{{ member }}"><br><br>
             {% endif %}
