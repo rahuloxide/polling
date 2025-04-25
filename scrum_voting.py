@@ -15,7 +15,7 @@ members = ["Alice", "Bob", "Charlie"]
 # Store votes
 votes = {member: "" for member in members}
 
-# HTML template
+# HTML template for home page
 html_template = """
 <!DOCTYPE html>
 <html>
@@ -27,11 +27,6 @@ html_template = """
             font-weight: bold;
         }
     </style>
-    <script>
-        function confirmReset() {
-            return confirm('Are you sure you want to reset all votes?');
-        }
-    </script>
 </head>
 <body>
     <h2>Scrum Story Point Voting</h2>
@@ -55,9 +50,44 @@ html_template = """
         {% endfor %}
         <input type="submit" value="Submit Vote">
     </form>
+    <br>
+    <a href="/admin">Go to Admin Page</a>
+</body>
+</html>
+"""
+
+# HTML template for admin page
+admin_template = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Scrum Story Point Voting</title>
+    <script>
+        function confirmReset() {
+            return confirm('Are you sure you want to reset all votes?');
+        }
+    </script>
+</head>
+<body>
+    <h2>Admin Panel</h2>
+    <table border="1">
+        <tr>
+            <th>Member</th>
+            <th>Vote</th>
+        </tr>
+        {% for member, vote in votes.items() %}
+        <tr>
+            <td>{{ member }}</td>
+            <td>{{ vote if vote else 'Not Voted' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <br>
     <form method="post" action="/reset" onsubmit="return confirmReset();">
         <input type="submit" value="Reset Votes">
     </form>
+    <br>
+    <a href="/">Go Back to Voting Page</a>
 </body>
 </html>
 """
@@ -88,11 +118,15 @@ def vote():
 
     return redirect(url_for('home'))
 
+@app.route('/admin', methods=['GET'])
+def admin():
+    return render_template_string(admin_template, votes=votes)
+
 @app.route('/reset', methods=['POST'])
 def reset_votes():
     global votes
     votes = {member: "" for member in members}
-    return redirect(url_for('home'))
+    return redirect(url_for('admin'))
 
 def save_votes(partial):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
