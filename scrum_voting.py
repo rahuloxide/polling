@@ -10,7 +10,7 @@ app.secret_key = 'secret_key_for_flash_messages'
 allowed_votes = {"0", "1", "2", "3", "5"}
 
 # Members list
-members = ["Alice", "Bob", "Charlie"]
+members = ["Minor", "Priyanka","Rahul", "Rakshitha", "Steven","Suresh", "Vicki"]
 
 # Store votes
 votes = {member: "" for member in members}
