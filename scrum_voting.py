@@ -25,9 +25,48 @@ html_template = """
 <head>
     <title>Scrum Story Point Voting</title>
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin-top: 50px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+        }
+        input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 200px;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007aff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #005bb5;
+        }
+        a {
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007aff;
+            font-weight: bold;
+        }
         .flash-message {
             color: green;
             font-weight: bold;
+            margin-top: 30px;
         }
         .voted-box {
             background-color: lightgrey;
@@ -38,31 +77,31 @@ html_template = """
 </head>
 <body>
     <h2>Scrum Story Point Voting</h2>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-          {% for message in messages %}
-            <li class="flash-message">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
     <form method="post" action="/vote">
         {% for member in members %}
-            <label for="{{ member }}">{{ member }}:</label>
+            <label for="{{ member }}">{{ member }}</label>
             {% if votes[member] %}
-                <input type="text" id="{{ member }}" name="{{ member }}" value="VOTED" readonly class="voted-box"><br><br>
+                <input type="text" id="{{ member }}" name="{{ member }}" value="VOTED" readonly class="voted-box">
             {% else %}
-                <input type="text" id="{{ member }}" name="{{ member }}"><br><br>
+                <input type="text" id="{{ member }}" name="{{ member }}">
             {% endif %}
         {% endfor %}
         <input type="submit" value="Submit Vote">
     </form>
-    <br>
     <a href="/admin">Go to Admin Page</a>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash-message">
+          {% for message in messages %}
+            {{ message }}
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
 </body>
 </html>
 """
+
 
 # HTML template for admin page
 admin_template = """
