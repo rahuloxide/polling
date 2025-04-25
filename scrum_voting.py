@@ -102,7 +102,6 @@ html_template = """
 </html>
 """
 
-
 # HTML template for admin page
 admin_template = """
 <!DOCTYPE html>
@@ -110,6 +109,45 @@ admin_template = """
 <head>
     <title>Admin - Scrum Story Point Voting</title>
     <meta http-equiv="refresh" content="5">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin-top: 50px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #c12722;
+        }
+        a {
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007aff;
+            font-weight: bold;
+        }
+    </style>
     <script>
         function confirmReset() {
             return confirm('Are you sure you want to reset all votes?');
@@ -118,7 +156,7 @@ admin_template = """
 </head>
 <body>
     <h2>Admin Panel</h2>
-    <table border="1">
+    <table>
         <tr>
             <th>Member</th>
             <th>Vote</th>
@@ -130,35 +168,16 @@ admin_template = """
         </tr>
         {% endfor %}
     </table>
-    <br>
     <h3>Average: {{ average }}</h3>
-    <br>
     <form method="post" action="/reset" onsubmit="return confirmReset();">
         <input type="submit" value="Reset Votes">
     </form>
-    <br>
     <a href="/">Go Back to Voting Page</a>
 </body>
 </html>
 """
 
-# HTML template for admin login
-admin_login_template = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Login</title>
-</head>
-<body>
-    <h2>Admin Login</h2>
-    <form method="post" action="/admin_login">
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password"><br><br>
-        <input type="submit" value="Login">
-    </form>
-</body>
-</html>
-"""
+# Flask routes and logic
 
 @app.route('/', methods=['GET'])
 def home():
@@ -202,7 +221,12 @@ def admin_login():
             return redirect(url_for('admin'))
         else:
             return "Incorrect password."
-    return render_template_string(admin_login_template)
+    return '''
+    <form method="post">
+        <input type="password" name="password" placeholder="Enter Admin Password">
+        <input type="submit" value="Login">
+    </form>
+    '''
 
 @app.route('/reset', methods=['POST'])
 def reset_votes():
