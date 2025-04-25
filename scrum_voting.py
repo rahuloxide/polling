@@ -64,6 +64,8 @@ html_template = """
         }
         .voted-box {
             background-color: lightgrey;
+            align-items: center;
+            padding: 10px;
             color: #007aff;
             font-weight: bold;
         }
