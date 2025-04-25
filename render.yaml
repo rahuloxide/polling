@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: scrum-voting-app
+    runtime: python
+    buildCommand: ""
+    startCommand: "scrum_voting.py"
