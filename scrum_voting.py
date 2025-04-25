@@ -1,4 +1,4 @@
-from flask import Flask, render_template_string, request, redirect, url_for, flash
+from flask import Flask, render_template_string, request, redirect, url_for, flash, session
 import csv
 import datetime
 import os
@@ -14,6 +14,9 @@ members = ["Alice", "Bob", "Charlie"]
 
 # Store votes
 votes = {member: "" for member in members}
+
+# Admin credentials
+ADMIN_PASSWORD = "admin123"
 
 # HTML template for home page
 html_template = """
@@ -83,11 +86,31 @@ admin_template = """
         {% endfor %}
     </table>
     <br>
+    <h3>Average: {{ average }}</h3>
+    <br>
     <form method="post" action="/reset" onsubmit="return confirmReset();">
         <input type="submit" value="Reset Votes">
     </form>
     <br>
     <a href="/">Go Back to Voting Page</a>
+</body>
+</html>
+"""
+
+# HTML template for admin login
+admin_login_template = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+</head>
+<body>
+    <h2>Admin Login</h2>
+    <form method="post" action="/admin_login">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"><br><br>
+        <input type="submit" value="Login">
+    </form>
 </body>
 </html>
 """
@@ -120,7 +143,21 @@ def vote():
 
 @app.route('/admin', methods=['GET'])
 def admin():
-    return render_template_string(admin_template, votes=votes)
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+    average = calculate_average()
+    return render_template_string(admin_template, votes=votes, average=average)
+
+@app.route('/admin_login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        password = request.form.get('password')
+        if password == ADMIN_PASSWORD:
+            session['admin_logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            return "Incorrect password."
+    return render_template_string(admin_login_template)
 
 @app.route('/reset', methods=['POST'])
 def reset_votes():
@@ -140,8 +177,14 @@ def save_votes(partial):
         if not partial:
             total = sum(int(vote) for vote in votes.values())
             average = total / len(votes)
-            writer.writerow(["Average", average])
+            writer.writerow(["Average", round(average, 2)])
         writer.writerow(["Last Updated", timestamp])
+
+def calculate_average():
+    valid_votes = [int(vote) for vote in votes.values() if vote]
+    if valid_votes:
+        return round(sum(valid_votes) / len(valid_votes), 2)
+    return 0.00
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
