@@ -10,7 +10,7 @@ app.secret_key = 'secret_key_for_flash_messages'
 allowed_votes = {"0", "1", "2", "3", "5"}
 
 # Members list
-members = ["Alice", "Bob", "Charlie"]
+members = ["Minor", "Priyanka","Rahul", "Rakshitha", "Steven","Suresh", "Vicki"]
 
 # Store votes
 votes = {member: "" for member in members}
@@ -31,7 +31,6 @@ html_template = """
             align-items: center;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             margin-top: 50px;
-            background-color: #f9f9f9;
         }
         form {
             display: flex;
@@ -45,7 +44,6 @@ html_template = """
             border-radius: 8px;
             width: 200px;
             font-size: 16px;
-            text-align: center;
         }
         input[type="submit"] {
             padding: 10px 20px;
@@ -68,25 +66,6 @@ html_template = """
             background-color: lightgrey;
             color: #007aff;
             font-weight: bold;
-            text-align: center;
-        }
-        table {
-            margin-top: 30px;
-            border-collapse: collapse;
-            width: 80%;
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        th, td {
-            padding: 12px 20px;
-            text-align: center;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #007aff;
-            color: white;
         }
     </style>
 </head>
@@ -116,7 +95,73 @@ html_template = """
 </html>
 """
 
-# (Admin template update is now included visually too)
+# HTML template for admin page
+admin_template = """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin - Scrum Story Point Voting</title>
+    <meta http-equiv="refresh" content="5">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            margin-top: 50px;
+        }
+        table {
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #ff3b30;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #c12722;
+        }
+    </style>
+    <script>
+        function confirmReset() {
+            return confirm('Are you sure you want to reset all votes?');
+        }
+    </script>
+</head>
+<body>
+    <h2>Admin Panel</h2>
+    <table>
+        <tr>
+            <th>Member</th>
+            <th>Vote</th>
+        </tr>
+        {% for member, vote in votes.items() %}
+        <tr>
+            <td>{{ member }}</td>
+            <td>{{ vote if vote else 'Not Voted' }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <h3>Average: {{ average }}</h3>
+    <form method="post" action="/reset" onsubmit="return confirmReset();">
+        <input type="submit" value="Reset Votes">
+    </form>
+</body>
+</html>
+"""
 
 @app.route('/', methods=['GET'])
 def home():
